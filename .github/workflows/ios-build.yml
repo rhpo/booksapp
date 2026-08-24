@@ -24,6 +24,12 @@ jobs:
       - name: 📦 Checkout code
         uses: actions/checkout@v7
 
+      - name: 🔍 Debug repo structure
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 3 -type d | grep -v node_modules | grep -v .git
+
       - name: 🔧 Setup Xcode
         uses: ./.github/actions/setup-xcode
 
