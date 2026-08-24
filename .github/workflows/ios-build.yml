@@ -7,7 +7,7 @@ on:
     paths:
       - ".github/actions/setup-xcode/**"
       - ".github/workflows/build-ios.yml"
-      - "apps/mobile/**"
+      - "app/**"
       - "pnpm-lock.yaml"
   workflow_dispatch:
 
@@ -24,12 +24,6 @@ jobs:
       - name: 📦 Checkout code
         uses: actions/checkout@v7
 
-      - name: 🔍 Debug repo structure
-        run: |
-          pwd
-          ls -la
-          find . -maxdepth 3 -type d | grep -v node_modules | grep -v .git
-
       - name: 🔧 Setup Xcode
         uses: ./.github/actions/setup-xcode
 
@@ -45,19 +39,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --child-concurrency=1
 
-      - name: Build mobile web assets
-        run: pnpm --dir apps/mobile/web-app build --outDir ../../../out/rn-web/html-renderer
-
       - name: 🔧 Prebuild native project
-        working-directory: apps/mobile
         run: npx expo prebuild --platform ios
 
       - name: List schemes
-        working-directory: apps/mobile/ios
+        working-directory: ios
         run: xcodebuild -list
 
       - name: 🔨 Build unsigned .app
-        working-directory: apps/mobile/ios
+        working-directory: ios
         run: |
           xcodebuild -workspace *.xcworkspace \
             -scheme YourAppScheme \
@@ -70,16 +60,16 @@ jobs:
             DEVELOPMENT_TEAM=""
 
       - name: 📦 Package as unsigned .ipa
-        working-directory: apps/mobile/ios
+        working-directory: ios
         run: |
           mkdir -p Payload
           cp -r build/Build/Products/Release-iphoneos/*.app Payload/
-          zip -r ../../build.ipa Payload
+          zip -r ../build.ipa Payload
           rm -rf Payload
 
       - name: 📤 Upload IPA
         uses: actions/upload-artifact@v7
         with:
           name: app-ios
-          path: apps/mobile/build.ipa
+          path: build.ipa
           retention-days: 90
