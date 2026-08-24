@@ -40,7 +40,7 @@ jobs:
           npx react-native build-ios --mode Release
 
       - name: Upload IPA Artifact
-        uses: actions/artifacts@v4
+        uses: actions/upload-artifact@v4  # <--- FIXED NAME
         with:
           name: ios-release-ipa
           path: ios/build/Build/Products/Release-iphoneos/*.ipa
