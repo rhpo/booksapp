@@ -10,7 +10,7 @@ runs:
 
     - name: Select Xcode version
       shell: bash
-      run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+      run: sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
 
     - name: Show Xcode version
       shell: bash
