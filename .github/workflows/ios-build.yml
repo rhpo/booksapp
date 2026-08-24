@@ -50,7 +50,7 @@ jobs:
         working-directory: ios
         run: |
           xcodebuild -workspace *.xcworkspace \
-            -scheme YourAppScheme \
+            -scheme LivresdAlgrie \
             -configuration Release \
             -sdk iphoneos \
             -derivedDataPath build \
