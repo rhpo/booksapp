@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: macos-14 # Uses GitHub's cloud-hosted Mac environments
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,7 +16,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install JavaScript Dependencies
         run: npm install
