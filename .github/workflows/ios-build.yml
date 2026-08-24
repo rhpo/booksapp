@@ -1,0 +1,47 @@
+name: iOS Build
+
+on:
+  push:
+    branches: [ main ] # Triggers the build whenever you push to the 'main' branch
+
+jobs:
+  build:
+    runs-on: macos-14 # Uses GitHub's cloud-hosted Mac environments
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install JavaScript Dependencies
+        run: npm install
+
+      - name: Cache Pods Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install
+          cd ..
+
+      - name: Build iOS App Archive
+        run: |
+          npx react-native build-ios --mode Release
+
+      - name: Upload IPA Artifact
+        uses: actions/artifacts@v4
+        with:
+          name: ios-release-ipa
+          path: ios/build/Build/Products/Release-iphoneos/*.ipa
+          retention-days: 5
